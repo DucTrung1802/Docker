@@ -1,0 +1,54 @@
+# version - Version of docker-compose
+version: "3.9"
+
+# networks - Managing network for container using Docker is difficult. It is easier to manage by docker-compose since all containers use a common network.
+networks:
+  # Name of network (optional)
+  public:
+  private:
+
+# services - Each containter in docker-compose is a service
+services:
+  # Name of container (service)
+  db:
+    # image - Define image for this container (could be found and downloaded on hub.docker.com)
+    image: postgres:alpine3.15
+    # ports - Used to communicate with outside via port(s)
+    ports:
+      - "25432:5432"
+    # Command of this image (this key has value in case user want to overwrite command)
+    # command: <command_of_this_image> (syntax)
+    # volumes - When a container is running, data are created and saved directly on the container. If the container is deleted, those data are gone, either. For maintaining data, we mount data to a path outside of the container (in host). When a container is removed and recreated with the same path of " volumes", it will use the data of that volume.
+    environment:
+      - POSTGRES_PASSWORD=pass
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    networks:
+      - private
+  server:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+
+    # volumes:
+    #   - "../../:/app"
+    #   - $HOME/go:/go
+    ports:
+      - "50001:3000"
+    # depends_on - Require which container (service) must be run before this container (service).
+    depends_on:
+      - db
+    # command: 
+    #   - /bin/sh
+    #   - -c
+    #   - |
+    #     air
+    # env_file - inclue an environment file which has all neccessary environments instead of listing every single environment
+    env_file: .env 
+    # extra_host:
+    #   - "host.docker.internal:host-gateway"
+    networks:
+      - private
+
+volumes:
+  postgres:
