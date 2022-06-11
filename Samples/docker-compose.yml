@@ -23,6 +23,7 @@ services:
       - POSTGRES_PASSWORD=pass
     volumes:
       - "postgres:/var/lib/postgresql/data"
+    # networks - services have to have same name of network to communicate with others.
     networks:
       - private
   server:
@@ -47,6 +48,7 @@ services:
     env_file: .env 
     # extra_host:
     #   - "host.docker.internal:host-gateway"
+    # networks - services have to have same name of network to communicate with others.
     networks:
       - private
 
