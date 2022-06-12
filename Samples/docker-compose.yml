@@ -50,6 +50,7 @@ services:
     #   - "host.docker.internal:host-gateway"
     # networks - services have to have same name of network to communicate with others.
     networks:
+      - public
       - private
 
 volumes:
